@@ -4,7 +4,6 @@
  * The admin-specific functionality of the plugin.
  *
  * @link       https://www.wherefrom.org
- * @since      1.0.0
  *
  * @package    Wherefrom
  * @subpackage Wherefrom/admin
@@ -29,7 +28,6 @@ class Wherefrom_Admin {
 	/**
 	 * The version of this plugin.
 	 *
-	 * @since    1.0.0
 	 * @access   private
 	 * @var      string    $version    The current version of this plugin.
 	 */

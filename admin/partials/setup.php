@@ -6,7 +6,6 @@
  * This file is used to markup the admin-facing aspects of the plugin.
  *
  * @link       https://www.wherefrom.org
- * @since      1.0.0
  *
  * @package    Wherefrom
  * @subpackage Wherefrom/admin/partials

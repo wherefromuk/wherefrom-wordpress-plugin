@@ -7,7 +7,6 @@
  * public-facing side of the site and the admin area.
  *
  * @link       https://www.wherefrom.org
- * @since      1.0.0
  *
  * @package    Wherefrom
  * @subpackage Wherefrom/includes
@@ -22,7 +21,6 @@
  * Also maintains the unique identifier of this plugin as well as the current
  * version of the plugin.
  *
- * @since      1.0.0
  * @package    Wherefrom
  * @subpackage Wherefrom/includes
  * @author     Wherefrom LTD <tech@wherefrom.org>
@@ -31,7 +29,6 @@ class Wherefrom {
 	/**
 	 * The current version of the plugin.
 	 *
-	 * @since    1.0.0
 	 * @access   protected
 	 * @var      string    $version    The current version of the plugin.
 	 */
@@ -41,7 +38,6 @@ class Wherefrom {
 	 * The loader that's responsible for maintaining and registering all hooks that power
 	 * the plugin.
 	 *
-	 * @since    1.0.0
 	 * @access   protected
 	 * @var      Wherefrom_Loader    $loader    Maintains and registers all hooks for the plugin.
 	 */
@@ -64,13 +60,12 @@ class Wherefrom {
 	 * Load the dependencies, define the locale, and set the hooks for the admin area and
 	 * the public-facing side of the site.
 	 *
-	 * @since    1.0.0
 	 */
 	public function __construct() {
 		if ( defined( 'WHEREFROM_VERSION' ) ) {
 			$this->version = WHEREFROM_VERSION;
 		} else {
-			$this->version = '1.0.0';
+			$this->version = '1.0.1';
 		}
 
 		$this->load_dependencies();
@@ -90,7 +85,6 @@ class Wherefrom {
 	 * Create an instance of the loader which will be used to register the hooks
 	 * with WordPress.
 	 *
-	 * @since    1.0.0
 	 * @access   private
 	 */
 	private function load_dependencies() {
@@ -112,7 +106,6 @@ class Wherefrom {
 	 * Register all of the hooks related to the admin area functionality
 	 * of the plugin.
 	 *
-	 * @since    1.0.0
 	 * @access   private
 	 */
 	private function define_admin_hooks() {
@@ -125,8 +118,6 @@ class Wherefrom {
 
 	/**
 	 * Run the loader to execute all of the hooks with WordPress.
-	 *
-	 * @since    1.0.0
 	 */
 	public function run() {
 		$this->loader->run();
@@ -140,7 +131,6 @@ class Wherefrom {
 	/**
 	 * The reference to the class that orchestrates the hooks with the plugin.
 	 *
-	 * @since     1.0.0
 	 * @return    Wherefrom_Loader    Orchestrates the hooks of the plugin.
 	 */
 	public function get_loader() {
