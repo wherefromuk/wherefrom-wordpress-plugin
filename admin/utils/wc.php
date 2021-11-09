@@ -27,7 +27,7 @@ function getParentsTree($term, $exclude = true) {
 }
 
 # Will return all categories of a product, including parent categories
-function getAllCategoriesForProduct($productId) {
+function wherefrom_getAllCategoriesForProduct($productId) {
 	$categoryTerms = get_the_terms( $productId, 'product_cat' );
 	$categories = [];
 
@@ -45,7 +45,7 @@ function getAllCategoriesForProduct($productId) {
 	return $cleanedCategories;
 }
 
-function getAllCategories() {
+function wherefrom_getAllCategories() {
 	$args = array(
 		'taxonomy'   => "product_cat",
 		'number'     => $number,

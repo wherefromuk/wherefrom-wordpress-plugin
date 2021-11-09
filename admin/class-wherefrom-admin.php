@@ -52,13 +52,13 @@ class Wherefrom_Admin {
 		wp_enqueue_style( 'jquery.steps', plugin_dir_url( __FILE__ ) . 'css/jquery.steps.css', array(), $this->version, 'all' );
 		wp_enqueue_style( 'lds', plugin_dir_url( __FILE__ ) . 'css/lds.css', array(), $this->version, 'all' );
 		wp_enqueue_style( 'wherefrom-admin', plugin_dir_url( __FILE__ ) . 'css/wherefrom-admin.css', array(), $this->version, 'all' );
+		wp_enqueue_style( 'fa', 'https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/fontawesome.min.css', array(), $this->version, 'all' );
 	}
 
 	/**
 	 * registers custom scripts
 	 */
 	public function enqueue_scripts() {
-		wp_enqueue_script( 'fa', 'https://kit.fontawesome.com/d04c55205b.js', array(), $this->version, true );
 		wp_enqueue_script( 'jquery.steps', plugin_dir_url( __FILE__ ) . 'js/jquery.steps.min.js', array(), $this->version, true );
 		wp_enqueue_script( 'jquery.multi-select', plugin_dir_url( __FILE__ ) . 'js/jquery.multi-select.js', array(), $this->version, true );
 		wp_enqueue_script( 'wherefrom-wc-admin', plugin_dir_url( __FILE__ ) . 'js/wherefrom-wc-admin.js', array( 'jquery' ), $this->version, false );
@@ -146,7 +146,7 @@ class Wherefrom_Admin {
 			$categoryTerms = get_the_terms( $product->get_id(), 'product_cat' );
 			$categories = [];
 
-			$categories = getAllCategoriesForProduct($product->get_id());
+			$categories = wherefrom_getAllCategoriesForProduct($product->get_id());
 
 			$categoryL1 = array();
 			$categoryL2 = array();
@@ -257,7 +257,7 @@ class Wherefrom_Admin {
 		);
 
 		// ---- seo name
-		wf_create_settings_field(
+		wherefrom_create_settings_field(
 			'wherefrom_seo_name',
 			'Wherefrom SEO name',
 			array (
@@ -272,7 +272,7 @@ class Wherefrom_Admin {
 		if (WherefromUtils::isWooCommerceActive()) {
 			if (false) {
 				// ---- api key
-				wf_create_settings_field(
+				wherefrom_create_settings_field(
 					'wherefrom_api_key',
 					'Wherefrom API key',
 					array (
@@ -283,7 +283,7 @@ class Wherefrom_Admin {
 			}
 
 			// ---- enable widget on product page
-			wf_create_settings_field(
+			wherefrom_create_settings_field(
 				'wherefrom_enable_single_product_widget',
 				'Show score on product page',
 				array (
@@ -294,7 +294,7 @@ class Wherefrom_Admin {
 			);
 
 			// ---- action 
-			wf_create_settings_field(
+			wherefrom_create_settings_field(
 				'wherefrom_widget_action',
 				'Widget Action',
 				array (
@@ -306,7 +306,7 @@ class Wherefrom_Admin {
 			);
 			
 			// ---- widget priority on product page
-			wf_create_settings_field(
+			wherefrom_create_settings_field(
 				'wherefrom_widget_priority',
 				'Widget priority',
 				array (
@@ -320,7 +320,7 @@ class Wherefrom_Admin {
 			);
 
 			// ---- id to use
-			wf_create_settings_field(
+			wherefrom_create_settings_field(
 				'wherefrom_id_field',
 				'Product ID Field',
 				array (
@@ -336,7 +336,7 @@ class Wherefrom_Admin {
 			// ---- enable autosync
 			if (false) {
 				// temprarily disable autosync feature
-				wf_create_settings_field(
+				wherefrom_create_settings_field(
 					'wherefrom_enable_autosync',
 					'Enable products autosync',
 					array (
@@ -348,12 +348,12 @@ class Wherefrom_Admin {
 			}
 
 			// ---- categories to exclude
-			wf_create_settings_field(
+			wherefrom_create_settings_field(
 				'wherefrom_categories_to_exclude',
 				'Categories to exclude from CSV',
 				array (
 					'type'      	=> 'select',
-					'options' 		=> getAllCategories(),
+					'options' 		=> wherefrom_getAllCategories(),
 					'multiselect' => true,
 					'size' 				=> 20
 				)

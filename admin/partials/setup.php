@@ -17,7 +17,7 @@ $isWooCommerce = WherefromUtils::isWooCommerceActive()
 
 <div class="wf-wrapper">
   <div class="wf-header">
-    <img src="https://docs.wherefrom.org/logo.png" width="48px" alt="wherefrom logo" />
+    <img src="<?php echo plugin_dir_url( __FILE__ ) . '../img/logo.png' ?>" width="48px" alt="wherefrom logo" />
   </div>
 </div>
 

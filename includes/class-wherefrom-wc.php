@@ -17,7 +17,7 @@
       }
 
       if ($id) {
-        echo do_shortcode('[wherefrom_product_widget id='.$id.']');
+        echo do_shortcode('[wherefrom_product_widget id='.esc_attr($id).']');
       }
     }
 

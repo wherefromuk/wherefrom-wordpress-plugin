@@ -1,6 +1,6 @@
 <?php
 
-function wf_create_settings_field($id, $title, $args, $registerOptions = array()) {
+function wherefrom_create_settings_field($id, $title, $args, $registerOptions = array()) {
   $args["id"] = $id;
   add_settings_field(
     $id,
@@ -27,7 +27,7 @@ function wherefrom_render_settings_field($args) {
   $disabled = $args['disabled'];
   $prepend_value = $args['prepend_value'];
 
-  $prependStart = (isset($prepend_value)) ? '<div class="input-prepend"> <span class="add-on">'.$prepend_value.'</span>' : '';
+  $prependStart = (isset($prepend_value)) ? '<div class="input-prepend"> <span class="add-on">'.esc_html($prepend_value).'</span>' : '';
   $prependEnd = (isset($prepend_value)) ? '</div>' : '';
 
   $value = get_option($id);
@@ -126,7 +126,7 @@ function wherefrom_render_settings_field($args) {
     break;
   }
 
-  echo esc_html($prependStart.$html.$prependEnd);
+  echo $prependStart.$html.$prependEnd;
 }
 
 function a($name, $value, $onlyRenderIfIsSet = false) {
@@ -136,18 +136,18 @@ function a($name, $value, $onlyRenderIfIsSet = false) {
 }
 
 function input($attributes = array()) {
-	return el('input', $attributes);
+	return node('input', $attributes);
 }
 
 function select($attributes = array(), $options = array()) {
-	return el('select', $attributes, $options);
+	return node('select', $attributes, $options);
 }
 
 function option($attributes = array(), $label) {
-	return el('option', $attributes, [$label]);
+	return node('option', $attributes, [$label]);
 }
 
-function el($type, $attributes = array(), $children = false) {
+function node($type, $attributes = array(), $children = false) {
 	if ($children) return '<'.$type.' '.implode(array_filter($attributes), ' ').'>'.implode(array_filter($children)).'</'.$type.'>';
 
 	return '<'.$type.' '.implode(array_filter($attributes), ' ').'/>';
