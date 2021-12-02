@@ -65,7 +65,7 @@ class Wherefrom {
 		if ( defined( 'WHEREFROM_VERSION' ) ) {
 			$this->version = WHEREFROM_VERSION;
 		} else {
-			$this->version = '1.0.1';
+			$this->version = '1.1.1';
 		}
 
 		$this->load_dependencies();
