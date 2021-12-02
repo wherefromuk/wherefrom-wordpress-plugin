@@ -98,6 +98,30 @@
           },
         });
       });
+
+      $("#wc-sync-products").click(function () {
+        $("#wf-sync-products-spinner").css("visibility", "visible");
+        $.ajax({
+          type: "GET",
+          url: wf.restURL + "wf/v1/products/sync",
+          beforeSend: function (xhr) {
+            xhr.setRequestHeader("X-WP-Nonce", wf.restNonce);
+          },
+          success: function (data) {
+            $("#wf-sync-products-spinner").css("visibility", "hidden");
+            console.log("data", data);
+            if (data && data.status) {
+              alert("Product Synced Successfully");
+            } else {
+              alert("there was an error trying to sync the products");
+            }
+          },
+          error: function () {
+            $("#wf-sync-products-spinner").css("visibility", "hidden");
+            alert("there was an error trying to sync the products");
+          },
+        });
+      });
     });
   });
 })(jQuery);

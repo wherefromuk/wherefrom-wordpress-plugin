@@ -83,6 +83,10 @@ class Wherefrom_Admin {
 			'methods' => 'GET',
 			'callback' => array( $this, 'handlePeroductsCsv')
 		));
+		register_rest_route('wf/v1/products', '/sync/', array(
+			'methods' => 'GET',
+			'callback' => array( $this, 'handleProductSync')
+		));
 	}
 
 	public function handleSeoName() {
@@ -103,6 +107,98 @@ class Wherefrom_Admin {
 
 		echo json_encode($response);
 		die;
+	}
+
+	public function postProductsToWherefrom($products) {
+		$apiKey = get_option('wherefrom_api_key');
+		$url = 'https://www.wherefrom.org/api/external/'.$apiKey.'/products/sync';
+		$ch = curl_init($url);
+		$jsonDataEncoded = json_encode(array(
+			"products" => $products
+		));
+
+		curl_setopt($ch, CURLOPT_POST, 1);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonDataEncoded);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json')); 
+		$result = curl_exec($ch);
+
+		curl_close($ch);
+		return $result;
+	}
+
+	public function handleProductSync() {
+		$idField = get_option('wherefrom_id_field', 'SKU' );
+		$categoriesToExclude = get_option('wherefrom_categories_to_exclude', array());
+
+		if ( ! wc_product_sku_enabled() && $idField === 'SKU' ) {
+			$idField = "ID";
+		}
+
+		$filter = array(
+			'status' => 'publish',
+			'limit' => -1
+		);
+
+		$results = wc_get_products($filter);
+
+		$products = array();
+
+		// Loop through products and display some data using WC_Product methods
+		foreach ( $results as $product ){
+			$id = $idField === 'SKU' ? $product->get_sku() : $product->get_id();
+
+			$terms = get_the_terms( $product->get_id(), 'product_brand' );
+			$brand_name = '';
+			foreach ( $terms as $term ){
+				if ( $term->parent == 0 ) {
+					$brand_name = $term->slug;
+				}
+			}  
+
+			$categoryTerms = get_the_terms( $product->get_id(), 'product_cat' );
+			$categories = [];
+
+			$categories = wherefrom_getAllCategoriesForProduct($product->get_id());
+
+			$categoryL1 = array();
+			$categoryL2 = array();
+			$categoryL3 = array();
+
+			foreach($categories as $category) {
+				$categoryChunks = explode(" >> ", $category);
+
+				if ($categoryChunks[0]) {
+					$categoryL1[] = $categoryChunks[0];
+				}
+				if ($categoryChunks[1]) {
+					$categoryL2[] = $categoryChunks[1];
+				}
+				if ($categoryChunks[2]) {
+					$categoryL3[] = $categoryChunks[2];
+				}
+			}
+
+			$categoryL1 = WHEREFROM_mostPopularInArray($categoryL1);
+			$categoryL2 = WHEREFROM_mostPopularInArray($categoryL2);
+			$categoryL3 = WHEREFROM_mostPopularInArray($categoryL3);
+			
+			$productData = array(
+				"sku" => $id,
+				"name" => $product->get_title(),
+				"brandName"=> '',
+				"description" => $product->get_description(),
+				"imageUrl"=> wp_get_attachment_url( $product->get_image_id() ),
+				"url" => $product->get_permalink(),
+				"category1" => $categoryL1,
+				"category2" => $categoryL2,
+				"category3" => $categoryL3
+			);
+
+			$products[] = $productData;
+		}
+
+		$response = $this->postProductsToWherefrom($products);
+		die();
 	}
 
 	public function handlePeroductsCsv() {
@@ -164,20 +260,20 @@ class Wherefrom_Admin {
 				}
 			}
 
-			$categoryL1 = mostPopularInArray($categoryL1);
-			$categoryL2 = mostPopularInArray($categoryL2);
-			$categoryL3 = mostPopularInArray($categoryL3);
+			$categoryL1 = WHEREFROM_mostPopularInArray($categoryL1);
+			$categoryL2 = WHEREFROM_mostPopularInArray($categoryL2);
+			$categoryL3 = WHEREFROM_mostPopularInArray($categoryL3);
 			
 			$productData = array(
-				"id" => $id,
+				"sku" => $id,
 				"name" => $product->get_title(),
-				"brand"=> $brand_name,
+				"brandName"=> $brand_name,
 				"description" => $product->get_description(),
 				"imageUrl"=> wp_get_attachment_url( $product->get_image_id() ),
-				"externalUrl" => $product->get_permalink(),
-				"categoryL1" => $categoryL1,
-				"categoryL2" => $categoryL2,
-				"categoryL3" => $categoryL3
+				"url" => $product->get_permalink(),
+				"category1" => $categoryL1,
+				"category2" => $categoryL2,
+				"category3" => $categoryL3
 			);
 
 			$products[] = $productData;
@@ -192,7 +288,7 @@ class Wherefrom_Admin {
 	 * registers menus
 	 */
 	public function addPluginAdminMenu() {
-		add_menu_page(  'wherefrom', 'Wherefrom', 'administrator', 'wherefrom', array( $this, 'displayPluginAdminDashboard' ), 'dashicons-chart-area', 26 );
+		add_menu_page(  'wherefrom', 'Wherefrom', 'administrator', 'wherefrom', array( $this, 'displayPluginAdminDashboard' ), 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjgwIiBoZWlnaHQ9IjY3MyIgdmlld0JveD0iMCAwIDY4MCA2NzMiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxwYXRoIGQ9Ik0xNjcuMjE5IDU0Mi4yMkw0NS4zMDk1IDEzNC43MkM0NC4xNTgxIDEzMC44NzEgNDcuMDQwNSAxMjcgNTEuMDU3NyAxMjdIMTQ5LjAzNkMxNTEuNjg1IDEyNyAxNTQuMDIxIDEyOC43MzggMTU0Ljc4MyAxMzEuMjc2TDIxNC4zODUgMzI5Ljk1QzIxNi4wMzYgMzM1LjQ1NCAyMjMuNzMzIDMzNS43MTMgMjI1Ljc1IDMzMC4zMzNMMzAwLjU0IDEzMC44OTNDMzAxLjQxOCAxMjguNTUxIDMwMy42NTcgMTI3IDMwNi4xNTggMTI3SDM3OS40MDNDMzgxLjg3NCAxMjcgMzg0LjA5MiAxMjguNTE0IDM4NC45OTIgMTMwLjgxNkw0NjMuMDc4IDMzMC41NzFDNDY1LjE2NCAzMzUuOTA3IDQ3Mi44MjcgMzM1LjU2NCA0NzQuNDI3IDMzMC4wNjNMNTMyLjI0MiAxMzEuMzI0QzUzMi45ODcgMTI4Ljc2MiA1MzUuMzM1IDEyNyA1MzguMDAzIDEyN0g2MjkuMDc5QzYzMy4wNTUgMTI3IDYzNS45MzIgMTMwLjc5NyA2MzQuODU1IDEzNC42MjVMNTIwLjIzMSA1NDIuMTI1QzUxOS41MDMgNTQ0LjcxMiA1MTcuMTQzIDU0Ni41IDUxNC40NTUgNTQ2LjVINDI0LjI1M0M0MjEuNzA1IDU0Ni41IDQxOS40MzUgNTQ0Ljg5MSA0MTguNTkyIDU0Mi40ODdMMzU1LjMwNCAzNjIuMTE4QzM1My40NjggMzU2Ljg4NCAzNDYuMTIyIDM1Ni43MzEgMzQ0LjA2OSAzNjEuODgzTDI3Mi4wMDYgNTQyLjcyMUMyNzEuMDk3IDU0NS4wMDMgMjY4Ljg4OCA1NDYuNSAyNjYuNDMyIDU0Ni41SDE3Mi45NjhDMTcwLjMxNiA1NDYuNSAxNjcuOTc5IDU0NC43NiAxNjcuMjE5IDU0Mi4yMloiIGZpbGw9ImJsYWNrIi8+Cjwvc3ZnPgo=', 26 );
 		add_submenu_page( 'wherefrom', 'Wherefrom Settings', 'Settings', 'administrator', 'wherefrom-settings', array( $this, 'displayPluginAdminSettings' ));
 	}
 
@@ -268,7 +364,7 @@ class Wherefrom_Admin {
 
 		// ---- wc specific
 		if (WherefromUtils::isWooCommerceActive()) {
-			if (false) {
+			// if (false) {
 				// ---- api key
 				wherefrom_create_settings_field(
 					'wherefrom_api_key',
@@ -278,7 +374,7 @@ class Wherefrom_Admin {
 						'subtype'   => 'text'
 					)
 				);
-			}
+			// }
 
 			// ---- enable widget on product page
 			wherefrom_create_settings_field(

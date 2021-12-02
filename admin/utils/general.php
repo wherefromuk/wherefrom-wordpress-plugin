@@ -1,5 +1,5 @@
 <?php
-function mostPopularInArray($array = array()) {
+function WHEREFROM_mostPopularInArray($array = array()) {
 	$values = array_count_values($array);
 	arsort($values);
 	return array_slice(array_keys($values), 0, 1, true)[0];
