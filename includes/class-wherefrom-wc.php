@@ -21,11 +21,32 @@
       }
     }
 
+    public function handleProductUpdated($post_id, $post, $update) {
+      if ($post->post_status != 'publish' || $post->post_type != 'product') {
+        return;
+      }
+
+      if (!$product = wc_get_product( $post )) {
+          return;
+      }
+
+      $productData = WHEREFROM_buildProduct($product);
+      
+      $products = array();
+      $products[] = $productData;
+
+		  $response = WHEREFROM_postProducts($products);
+    }
+
     public function register() {
       $priority = get_option('wherefrom_widget_priority', 25);
       $action = get_option('wherefrom_widget_action', 'woocommerce_single_product_summary');
+      $autoSyncEnabled = get_option('wherefrom_enable_product_autosync', true );
 
       add_action( $action, array($this, 'renderProductScore'), $priority, 1 );
+      if ($autoSyncEnabled) {
+        add_action( 'save_post', array($this, 'handleProductUpdated'), 10, 3 );
+      }
     }
   }
 ?>

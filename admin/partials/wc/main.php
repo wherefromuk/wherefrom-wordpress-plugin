@@ -13,6 +13,7 @@
 
 $lastExportTimeStamp = get_option('wherefrom_last_export_timestamp', null );
 $apiKey = get_option('wherefrom_api_key');
+$autoSyncEnabled = get_option('wherefrom_enable_product_autosync', true );
 ?>
 <div class="wf-wrapper">
   <div class="wf-header">
@@ -23,6 +24,10 @@ $apiKey = get_option('wherefrom_api_key');
 <div class="wf-content">
   <h1>Wherefrom + WooCommerce = ❤️</h1>
   <p>Your woocommerce store is now connected to wherefrom</p>
+  <?php if ($autoSyncEnabled) { ?>
+    <p><b>Product Autosync is enabled.</b> <br />When a new product is creaded, or one is updated, it will be automatically submited to Wherefrom.</p>
+    <p>If you would like wherefrom to reprocess your products, you can do this, by syncing your whole catalog of products</p>
+  <?php } ?>
   <p>
     <?php if ($lastExportTimeStamp) { ?>
     <!-- <div class="row" style="margin-bottom: 20px;">
@@ -36,9 +41,14 @@ $apiKey = get_option('wherefrom_api_key');
     <div class="row">
       <!-- <button class="green">Sync products</button>  -->
       <?php if ($apiKey && $apiKey !== '') { ?>
-        <button id="wc-sync-products" class="green">Sync Products</button></div>
-        <div id="wf-sync-products-spinner" class="lds-ring" style="margin-top: 10px; visibility: hidden;"><div></div><div></div><div></div><div></div></div>
-      <?php } else {?>
+        <?php if ($autoSyncEnabled)  { ?>
+          <button id="wc-sync-products" class="green">Sync Now</button></div>
+          <div id="wf-sync-products-spinner" class="lds-ring" style="margin-top: 10px; visibility: hidden;"><div></div><div></div><div></div><div></div></div>
+        <?php } else { ?>
+          <button id="wc-sync-products" class="green">Sync Products</button></div>
+          <div id="wf-sync-products-spinner" class="lds-ring" style="margin-top: 10px; visibility: hidden;"><div></div><div></div><div></div><div></div></div>
+        <?php } ?>
+      <?php } else { ?>
         <button id="wc-generate-products-csv" class="green">Generate CSV</button></div>
         <p>Please add an Api Key in the Settings section to enable auto-publishing</p>
       <?php } ?>

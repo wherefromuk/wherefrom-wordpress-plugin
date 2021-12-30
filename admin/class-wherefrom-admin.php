@@ -109,31 +109,7 @@ class Wherefrom_Admin {
 		die;
 	}
 
-	public function postProductsToWherefrom($products) {
-		$apiKey = get_option('wherefrom_api_key');
-		$url = 'https://www.wherefrom.org/api/external/'.$apiKey.'/products/sync';
-		$ch = curl_init($url);
-		$jsonDataEncoded = json_encode(array(
-			"products" => $products
-		));
-
-		curl_setopt($ch, CURLOPT_POST, 1);
-		curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonDataEncoded);
-		curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json')); 
-		$result = curl_exec($ch);
-
-		curl_close($ch);
-		return $result;
-	}
-
 	public function handleProductSync() {
-		$idField = get_option('wherefrom_id_field', 'SKU' );
-		$categoriesToExclude = get_option('wherefrom_categories_to_exclude', array());
-
-		if ( ! wc_product_sku_enabled() && $idField === 'SKU' ) {
-			$idField = "ID";
-		}
-
 		$filter = array(
 			'status' => 'publish',
 			'limit' => -1
@@ -145,59 +121,10 @@ class Wherefrom_Admin {
 
 		// Loop through products and display some data using WC_Product methods
 		foreach ( $results as $product ){
-			$id = $idField === 'SKU' ? $product->get_sku() : $product->get_id();
-
-			$terms = get_the_terms( $product->get_id(), 'product_brand' );
-			$brand_name = '';
-			foreach ( $terms as $term ){
-				if ( $term->parent == 0 ) {
-					$brand_name = $term->slug;
-				}
-			}  
-
-			$categoryTerms = get_the_terms( $product->get_id(), 'product_cat' );
-			$categories = [];
-
-			$categories = wherefrom_getAllCategoriesForProduct($product->get_id());
-
-			$categoryL1 = array();
-			$categoryL2 = array();
-			$categoryL3 = array();
-
-			foreach($categories as $category) {
-				$categoryChunks = explode(" >> ", $category);
-
-				if ($categoryChunks[0]) {
-					$categoryL1[] = $categoryChunks[0];
-				}
-				if ($categoryChunks[1]) {
-					$categoryL2[] = $categoryChunks[1];
-				}
-				if ($categoryChunks[2]) {
-					$categoryL3[] = $categoryChunks[2];
-				}
-			}
-
-			$categoryL1 = WHEREFROM_mostPopularInArray($categoryL1);
-			$categoryL2 = WHEREFROM_mostPopularInArray($categoryL2);
-			$categoryL3 = WHEREFROM_mostPopularInArray($categoryL3);
-			
-			$productData = array(
-				"sku" => $id,
-				"name" => $product->get_title(),
-				"brandName"=> '',
-				"description" => $product->get_description(),
-				"imageUrl"=> wp_get_attachment_url( $product->get_image_id() ),
-				"url" => $product->get_permalink(),
-				"category1" => $categoryL1,
-				"category2" => $categoryL2,
-				"category3" => $categoryL3
-			);
-
-			$products[] = $productData;
+			$products[] = WHEREFROM_buildProduct($product);
 		}
 
-		$response = $this->postProductsToWherefrom($products);
+		$response = WHEREFROM_postProducts($products);
 		die();
 	}
 
@@ -390,7 +317,7 @@ class Wherefrom_Admin {
 			// ---- action 
 			wherefrom_create_settings_field(
 				'wherefrom_widget_action',
-				'Widget Action',
+				'Render Wwdget on action',
 				array (
 					'type'      => 'input',
 					'subtype'   => 'text',
@@ -427,24 +354,10 @@ class Wherefrom_Admin {
 				array("default" => 25)
 			);
 
-			// ---- enable autosync
-			if (false) {
-				// temprarily disable autosync feature
-				wherefrom_create_settings_field(
-					'wherefrom_enable_autosync',
-					'Enable products autosync',
-					array (
-						'type'      => 'input',
-						'subtype'   => 'checkbox'
-					),
-					array("default" => false)
-				);
-			}
-
 			// ---- categories to exclude
 			wherefrom_create_settings_field(
 				'wherefrom_categories_to_exclude',
-				'Categories to exclude from CSV',
+				'Categories to exclude',
 				array (
 					'type'      	=> 'select',
 					'options' 		=> wherefrom_getAllCategories(),
@@ -452,6 +365,28 @@ class Wherefrom_Admin {
 					'size' 				=> 20
 				)
 			);
+
+			// ---- enable autosync
+			wherefrom_create_settings_field(
+				'wherefrom_enable_product_autosync',
+				'Products auto sync',
+				array (
+					'type'      => 'input',
+					'subtype'   => 'checkbox',
+				),
+				array("default" => true)
+			);
+
+			// ---- enable checkout
+			// wherefrom_create_settings_field(
+			// 	'wherefrom_enable_checkout_review',
+			// 	'Request review after chekout',
+			// 	array (
+			// 		'type'      => 'input',
+			// 		'subtype'   => 'checkbox',
+			// 	),
+			// 	array("default" => true)
+			// );
 		}
 	}
 

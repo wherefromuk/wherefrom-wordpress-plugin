@@ -3,24 +3,28 @@
  * included in this file.
  */
 
-#wpcontent {
+body.toplevel_page_wherefrom #wpcontent,
+body.wherefrom_page_wherefrom-settings #wpcontent {
   min-height: calc(100vh - 32px);
   padding: 0;
 }
 
-#wpbody {
+body.toplevel_page_wherefrom #wpbody,
+body.wherefrom_page_wherefrom-settings #wpbody {
   display: inline-block;
   width: 100%;
   padding-top: 0;
 }
 
-.wf-wrapper {
+body.toplevel_page_wherefrom .wf-wrapper,
+body.wherefrom_page_wherefrom-settings .wf-wrapper {
   display: flex;
   flex-direction: column;
   align-items: stretch;
   justify-content: center;
 }
-.wf-header {
+body.toplevel_page_wherefrom .wf-header,
+body.wherefrom_page_wherefrom-settings .wf-header {
   height: 60px;
   background-color: #fff;
   padding: 5px 10px;
@@ -29,7 +33,8 @@
   align-items: center;
   justify-content: center;
 }
-.wf-content {
+body.toplevel_page_wherefrom .wf-content,
+body.wherefrom_page_wherefrom-settings .wf-content {
   width: 100%;
   max-width: 700px;
   background-color: #fff;
@@ -42,43 +47,57 @@
   align-items: center;
   justify-content: center;
 }
-.form-table th {
+body.toplevel_page_wherefrom .form-table th,
+body.wherefrom_page_wherefrom-settings .form-table th {
   text-align: right;
 }
-p.submit {
+body.toplevel_page_wherefrom p.submit,
+body.wherefrom_page_wherefrom-settings p.submit {
   text-align: center;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
+body.toplevel_page_wherefrom h1,
+body.toplevel_page_wherefrom h2,
+body.toplevel_page_wherefrom h3,
+body.toplevel_page_wherefrom h4,
+body.toplevel_page_wherefrom h5,
+body.toplevel_page_wherefrom h6,
+body.wherefrom_page_wherefrom-settings h1,
+body.wherefrom_page_wherefrom-settings h2,
+body.wherefrom_page_wherefrom-settings h3,
+body.wherefrom_page_wherefrom-settings h4,
+body.wherefrom_page_wherefrom-settings h5,
+body.wherefrom_page_wherefrom-settings h6 {
   display: block;
 }
-form {
+body.toplevel_page_wherefrom form,
+body.wherefrom_page_wherefrom-settings form {
   margin: auto;
 }
-p {
+body.toplevel_page_wherefrom p,
+body.wherefrom_page_wherefrom-settings p {
   text-align: center;
 }
-.notice {
+body.toplevel_page_wherefrom .notice,
+body.wherefrom_page_wherefrom-settings .notice {
   width: 100%;
 }
 
-.row {
+body.toplevel_page_wherefrom .row,
+body.wherefrom_page_wherefrom-settings .row {
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
 }
 
-a {
+body.toplevel_page_wherefrom a,
+body.wherefrom_page_wherefrom-settings a {
   text-decoration: none;
 }
 
-button {
+body.toplevel_page_wherefrom button,
+body.wherefrom_page_wherefrom-settings button {
   height: 40px;
   border-radius: 30px;
   margin-left: 10px;
@@ -96,38 +115,46 @@ button {
   text-decoration: none;
 }
 
-button.white {
+body.toplevel_page_wherefrom button.white,
+body.wherefrom_page_wherefrom-settings button.white {
   color: #010101;
   background-color: #fff;
   box-shadow: 0px -2px 4px rgba(128, 128, 128, 0.1),
     0px 2px 4px rgba(120, 120, 120, 0.25);
 }
 
-button.white:hover {
+body.toplevel_page_wherefrom button.white:hover,
+body.wherefrom_page_wherefrom-settings button.white:hover {
   background-color: #f7f7f7;
 }
 
-button.white:active {
+body.toplevel_page_wherefrom button.white:active,
+body.wherefrom_page_wherefrom-settings button.white:active {
   background-color: #f7f7f7;
 }
 
-button.green {
+body.toplevel_page_wherefrom button.green,
+body.wherefrom_page_wherefrom-settings button.green {
   color: #010101;
   background-color: #4bcb8e;
 }
 
-button.green:hover {
+body.toplevel_page_wherefrom button.green:hover,
+body.wherefrom_page_wherefrom-settings button.green:hover {
   background-color: #32b275;
 }
 
-button.green:active {
+body.toplevel_page_wherefrom button.green:active,
+body.wherefrom_page_wherefrom-settings button.green:active {
   background-color: #32b275;
 }
 
-button > i {
+body.toplevel_page_wherefrom button > i,
+body.wherefrom_page_wherefrom-settings button > i {
   margin-left: 10px;
 }
 
-#wf-setup-wizzard {
+body.toplevel_page_wherefrom #wf-setup-wizzard,
+body.wherefrom_page_wherefrom-settings #wf-setup-wizzard {
   display: none;
 }
