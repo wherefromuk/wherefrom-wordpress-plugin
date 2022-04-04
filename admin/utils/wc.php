@@ -69,6 +69,7 @@ function wherefrom_getAllCategories() {
 
 function WHEREFROM_buildProduct ($product) {
 	$idField = get_option('wherefrom_id_field', 'SKU' );
+	$brandField = get_option('wherefrom_brand_field', 'brand' );
 	$categoriesToExclude = get_option('wherefrom_categories_to_exclude', array());
 
 	if ( ! wc_product_sku_enabled() && $idField === 'SKU' ) {
@@ -76,14 +77,6 @@ function WHEREFROM_buildProduct ($product) {
 	}
 
 	$id = $idField === 'SKU' ? $product->get_sku() : $product->get_id();
-
-	$terms = get_the_terms( $product->get_id(), 'product_brand' );
-	$brand_name = '';
-	foreach ( $terms as $term ){
-		if ( $term->parent == 0 ) {
-			$brand_name = $term->slug;
-		}
-	}  
 
 	$categoryTerms = get_the_terms( $product->get_id(), 'product_cat' );
 	$categories = [];
@@ -115,7 +108,7 @@ function WHEREFROM_buildProduct ($product) {
 	$productData = array(
 		"sku" => $id,
 		"name" => $product->get_title(),
-		"brandName"=> '',
+		"brandName"=> get_post_meta( $product->get_id(), $brandField, true ),
 		"description" => $product->get_description(),
 		"imageUrl"=> wp_get_attachment_url( $product->get_image_id() ),
 		"url" => $product->get_permalink(),

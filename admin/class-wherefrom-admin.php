@@ -354,6 +354,17 @@ class Wherefrom_Admin {
 				array("default" => 25)
 			);
 
+			// ---- id to use
+			wherefrom_create_settings_field(
+				'wherefrom_brand_field',
+				'Product Brand Custom Field',
+				array (
+					'type'      => 'input',
+					'subtype'   => 'text'
+				),
+				array("default" => 'brand')
+			);
+
 			// ---- categories to exclude
 			wherefrom_create_settings_field(
 				'wherefrom_categories_to_exclude',
