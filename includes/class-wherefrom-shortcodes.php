@@ -14,6 +14,7 @@ class Wherefrom_Shortcodes {
 	
 		$wfPluginOutput = '
 			<iframe
+				class="wherefrom-widget wherefrom-brand-stacked wherefrom-brand-'.esc_attr($seoName).'"
 				src="https://wherefrom.org/widget/brand/'.esc_attr($seoName).'"
 				frameborder="0"
 				scrolling="no"
@@ -42,6 +43,7 @@ class Wherefrom_Shortcodes {
 	
 		$wfPluginOutput = '
 			<iframe
+				class="wherefrom-widget wherefrom-brand-banner wherefrom-brand-'.esc_attr($seoName).'"
 				src="https://wherefrom.org/widget/brand/'.esc_attr($seoName).'/banner"
 				frameborder="0"
 				scrolling="no"
@@ -96,6 +98,7 @@ class Wherefrom_Shortcodes {
 
 		$wfPluginOutput = '
 			<iframe
+				class="wherefrom-widget wherefrom-product-widget"
 				src="'.$url.'"
 				frameborder="0"
 				scrolling="no"
