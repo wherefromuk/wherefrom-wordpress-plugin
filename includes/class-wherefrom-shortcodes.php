@@ -2,20 +2,40 @@
 class Wherefrom_Shortcodes {
 	
   public function wherefrom_brand_widget_stacked( $atts ) {
-		$params = shortcode_atts( array(
-			'width' => '220px',
-			'height' => '130px',
-			'backgroundColor' => 'transparent'
-		), $atts );
-	
 		$seoName = get_option('wherefrom_seo_name', false );
 
 		if (! $seoName || $seoName === '') return '<div style="background-color: red; color: white; padding: 20px;">To display your Wherefrom Score, please set your SEO NAME in the Wherefrom\'s settings within your Admin area.</div>';
+
+		$url = 'https://wherefrom.org/widget/brand/'.esc_attr($seoName);
+
+		$logoVariant = get_option('wherefrom_brand_widget_logo_variant', 'black');
+
+		$params = shortcode_atts(array(
+			'width' => '220px',
+			'height' => '130px',
+			'backgroundColor' => 'transparent',
+			'logoVariant' => $logoVariant,
+			'align' => 'center'
+		), $atts );
+
+		if ($params['logoVariant'] !== 'black' || $params['align'] !== 'left') {
+			$wfParamsArray = array();
+
+			if ($params['logoVariant'] !== 'black') {
+				$wfParamsArray[] = 'logoVariant='.esc_attr($params['logoVariant']);
+			}
+
+			if ($params['align'] !== 'left') {
+				$wfParamsArray[] = 'align='.esc_attr($params['align']);
+			}
+
+			$url .= '?'.implode('&', $wfParamsArray);
+		}
 	
 		$wfPluginOutput = '
 			<iframe
 				class="wherefrom-widget wherefrom-brand-stacked wherefrom-brand-'.esc_attr($seoName).'"
-				src="https://wherefrom.org/widget/brand/'.esc_attr($seoName).'"
+				src="'.$url.'"
 				frameborder="0"
 				scrolling="no"
 				allowtransparency="true"
@@ -30,25 +50,38 @@ class Wherefrom_Shortcodes {
 	}
 	
 	public function wherefrom_brand_widget_banner( $atts ) {
-		$params = shortcode_atts( array(
-			'width' => '100%',
-			'maxWidth' => '1024px',
-			'height' => '50px',
-			'backgroundColor' => 'transparent'
-		), $atts );
-	
 		$seoName = get_option('wherefrom_seo_name', false );
-
 		if (! $seoName || $seoName === '') return '<div style="background-color: red; color: white; padding: 20px;">To display your Wherefrom Score, please set your SEO NAME in the Wherefrom\'s settings within your Admin area.</div>';
+
+		$url = 'https://wherefrom.org/widget/brand/'.esc_attr($seoName).'/banner';
+
+		$logoVariant = get_option('wherefrom_brand_widget_logo_variant', 'black');
+
+		$params = shortcode_atts(array(
+			'width' => '100%',
+			'height' => '50px',
+			'backgroundColor' => 'transparent',
+			'logoVariant' => $logoVariant
+		), $atts );
+
+		if ($params['logoVariant'] !== 'black') {
+			$wfParamsArray = array();
+
+			if ($params['logoVariant'] !== 'black') {
+				$wfParamsArray[] = 'logoVariant='.esc_attr($params['logoVariant']);
+			}
+
+			$url .= '?'.implode('&', $wfParamsArray);
+		}
 	
 		$wfPluginOutput = '
 			<iframe
 				class="wherefrom-widget wherefrom-brand-banner wherefrom-brand-'.esc_attr($seoName).'"
-				src="https://wherefrom.org/widget/brand/'.esc_attr($seoName).'/banner"
+				src="'.$url.'"
 				frameborder="0"
 				scrolling="no"
 				allowtransparency="true"
-				style="background-color: '.esc_attr($params['backgroundColor']).'; maxWidth: '.esc_attr($params['maxWidth']).';"
+				style="background-color: '.esc_attr($params['backgroundColor']).';"
 				width="'.esc_attr($params['width']).'"
 				height="'.esc_attr($params['height']).'"
 			></iframe>
@@ -58,15 +91,33 @@ class Wherefrom_Shortcodes {
 	}
 
 	public function wherefrom_product_widget( $atts ) {
+		$seoName = get_option('wherefrom_seo_name', false );
+
+		$layout = get_option('wherefrom_product_widget_layout', 'vertical');
+		$align = get_option('wherefrom_product_widget_align', 'center');
+		$logoVariant = get_option('wherefrom_product_widget_logo_variant', 'black');
+		$condensed = get_option('wherefrom_product_widget_condensed', false);
+		
 		$params = shortcode_atts( array(
 			'id_type' => 'SID',
 			'id' => null,
 			'width' => '100%',
 			'height' => '130px',
 			'backgroundColor' => 'transparent',
-			'align' => 'center',
-			'theme' => 'coloured'
+			'theme' => 'coloured',
+			'layout' => $layout,
+			'align' => $align,
+			'logoVariant' => $logoVariant,
+			'condensed' => $condensed
 		), $atts );
+
+		if ($params['layout'] === 'vertical') {
+			if ($params['condensed'] === 'condensed') {
+				$params['height'] = '87px';
+			}else{
+				$params['height'] = '150px';
+			}
+		}
 	
 		$seoName = get_option('wherefrom_seo_name', false );
 
@@ -82,19 +133,27 @@ class Wherefrom_Shortcodes {
 			$url .= '/SID';
 		}
 
-		if ($params['align'] !== 'center' || $params['theme'] !== 'coloured') {
-			$wfParamsArray = array();
+		$wfParamsArray = array();
 
-			if ($params['align'] !== 'center') {
-				$wfParamsArray[] = 'align='.esc_attr($params['align']);
-			}
+		$wfParamsArray[] = 'align='.esc_attr($params['align']);
 
-			if ($params['theme'] !== 'coloured') {
-				$wfParamsArray[] = 'theme='.esc_attr($params['theme']);
-			}
-
-			$url .= '?'.implode('&', $wfParamsArray);
+		if ($params['theme'] !== 'coloured') {
+			$wfParamsArray[] = 'theme='.esc_attr($params['theme']);
 		}
+
+		if ($params['layout'] !== 'horizontal') {
+			$wfParamsArray[] = 'layout='.esc_attr($params['layout']);
+		}
+
+		if ($params['logoVariant'] !== 'black') {
+			$wfParamsArray[] = 'logoVariant='.esc_attr($params['logoVariant']);
+		}
+
+		if ($params['condensed'] !== 'default') {
+			$wfParamsArray[] = 'condensed=true';
+		}
+
+		$url .= '?'.implode('&', $wfParamsArray);
 
 		$wfPluginOutput = '
 			<iframe
@@ -103,7 +162,7 @@ class Wherefrom_Shortcodes {
 				frameborder="0"
 				scrolling="no"
 				allowtransparency="true"
-				style="background-color: transparent; maxWidth: 1024px;"
+				style="background-color: transparent;"
 				width="'.esc_attr($params['width']).'"
 				height="'.esc_attr($params['height']).'"
 			></iframe>

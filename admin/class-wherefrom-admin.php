@@ -388,6 +388,81 @@ class Wherefrom_Admin {
 				array("default" => true)
 			);
 
+			// ---- brand widget logo color
+			wherefrom_create_settings_field(
+				'wherefrom_brand_widget_logo_variant',
+				'Brand widget logo variant',
+				array (
+					'type'    => 'select',
+					'options' => array(
+						'black' => 'black',
+						'coloured'	 => 'coloured',
+						'grey' => 'grey',
+						'white'	 => 'white'
+					),
+				),
+				array("default" => 'black')
+			);
+
+			// ----
+
+			// ---- product widget layout
+			wherefrom_create_settings_field(
+				'wherefrom_product_widget_layout',
+				'Product widget layout',
+				array (
+					'type'    => 'select',
+					'options' => array(
+						'vertical'	 => 'vertical',
+						'horizontal' => 'horizontal'
+					),
+				),
+				array("default" => 'vertical')
+			);
+
+			// ---- product widget align
+			wherefrom_create_settings_field(
+				'wherefrom_product_widget_align',
+				'Product widget align',
+				array (
+					'type'    => 'select',
+					'options' => array(
+						'left' => 'left',
+						'center'	 => 'center',
+					),
+				),
+				array("default" => 'left')
+			);
+			// ---- product widget logo color
+			wherefrom_create_settings_field(
+				'wherefrom_product_widget_logo_variant',
+				'Product widget logo variant',
+				array (
+					'type'    => 'select',
+					'options' => array(
+						'black' => 'black',
+						'coloured'	 => 'coloured',
+						'grey' => 'grey',
+						'white'	 => 'white'
+					),
+				),
+				array("default" => 'black')
+			);
+
+			// product widget condensed
+			wherefrom_create_settings_field(
+				'wherefrom_product_widget_condensed',
+				'Product widget sizing',
+				array (
+					'type'    => 'select',
+					'options' => array(
+						'default' => 'default',
+						'condensed'	 => 'condensed'
+					),
+				),
+				array("default" => 'false')
+			);
+
 			// ---- enable checkout
 			// wherefrom_create_settings_field(
 			// 	'wherefrom_enable_checkout_review',
