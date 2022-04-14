@@ -356,6 +356,20 @@ class Wherefrom_Admin {
 
 			// ---- id to use
 			wherefrom_create_settings_field(
+				'wherefrom_brand_handling',
+				'Product Brand Source',
+				array (
+					'type'    => 'select',
+					'options' => array(
+						'custom field'	=> 'custom field',
+						'pwb'						=> 'pwb'
+					),
+				),
+				array("default" => 'custom field')
+			);
+
+			// ---- custom brand field to use
+			wherefrom_create_settings_field(
 				'wherefrom_brand_field',
 				'Product Brand Custom Field',
 				array (

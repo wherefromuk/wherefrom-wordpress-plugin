@@ -9,7 +9,7 @@
  * Plugin Name:       Wherefrom
  * Plugin URI:        https://github.com/wherefromuk/wherefrom-wordpress-plugin
  * Description:       This is a short description of what the plugin does. It's displayed in the WordPress admin area.
- * Version:           1.2.9
+ * Version:           1.3.0
  * Author:            Wherefrom LTD
  * Author URI:        https://www.wherefrom.org/crissmoldovan
  * License:           GPL-2.0+
@@ -22,7 +22,7 @@ if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
-define( 'WHEREFROM_VERSION', '1.2.9' );
+define( 'WHEREFROM_VERSION', '1.3.0' );
 
 /**
  * The core plugin class that is used to define internationalization,
